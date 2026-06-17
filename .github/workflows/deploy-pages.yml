@@ -7,7 +7,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages-deploy
@@ -16,31 +18,31 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Check public site
         run: make check
 
-      - name: Publish site to gh-pages
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare public artifact
         run: |
           set -euo pipefail
+          mkdir _site
+          cp -a .nojekyll CNAME index.html projects.html outcomes.html info.html assets _site/
 
-          tmp_dir="$(mktemp -d)"
-          cp -a .nojekyll CNAME index.html projects.html outcomes.html info.html assets "$tmp_dir"/
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git switch --orphan gh-pages-deploy
-          git rm -rf . >/dev/null 2>&1 || true
-          cp -a "$tmp_dir"/. .
-          rm -rf "$tmp_dir"
-
-          git add .
-          git commit -m "Deploy public site from ${GITHUB_SHA}"
-          git push --force origin HEAD:gh-pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
