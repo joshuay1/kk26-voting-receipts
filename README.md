@@ -9,6 +9,12 @@ to allocate funding to cultural projects in Winterthur. The public page shows ho
 individual support, project costs, and remaining supporter budgets translated
 into the final collective outcome.
 
+The page is built around the idea that proportional democratic funding should be
+understandable to participants. Voting receipts are not just vote confirmations;
+they are explainability records that show each participant’s starting virtual
+budget, the projects they supported, the amount assigned to each funded project,
+and which supported projects were not funded.
+
 ## What The Site Shows
 
 The site has three main public views:
@@ -37,6 +43,20 @@ The voting receipt uses that priceability as an explanation device. Instead of
 only showing winners and losers, it shows how each vote became a contribution,
 why some supported projects were funded, and why others could no longer be
 covered by the available budgets.
+
+This site implements the 2026 KK26 receipt platform as a layered explanation
+system: personal voter receipts anchor the process in each participant’s own
+choices, project receipts show who financed each outcome, and the outcome table
+shows the full portfolio-level budget flow.
+
+The theoretical motivation is that MES-like proportional rules are not only
+formally fair, they are priceable: each funded project can be traced to a
+coalition of supporters whose remaining virtual budgets cover its cost. That
+traceability is what makes a receipt meaningful. The receipt is therefore a
+bounded explainability artifact, not a transferable proof of a private ballot.
+It is designed to help participants understand how their preferences and the
+group’s priorities produced the final funding outcome, while keeping privacy and
+non-transferability explicit.
 
 ## Privacy
 
@@ -86,21 +106,6 @@ make check
 
 This verifies that the static site has the expected files and that obvious
 private/source-data directories are absent.
-
-## Deployment
-
-Pushes to `main` deploy the public site with GitHub Actions. The workflow checks
-the repository, prepares only the static public files, and publishes them through
-GitHub Pages.
-
-The intended public domain is:
-
-```text
-https://kk26.win
-```
-
-GitHub Pages must be enabled for this repository with **Build and deployment →
-Source → GitHub Actions**.
 
 ## Background
 
